@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 
 // 3rd Party Modules
 const LIBRARY_IMPORTS = [
-  ConfigModule.forRoot({ cache: true, isGlobal: true, envFilePath: [".env.development", ".env"] }),
+  ConfigModule.forRoot({ cache: true, isGlobal: true, envFilePath: [".env", ".env.development"] }),
   TypeOrmModule.forRoot(getDatabaseConfig()),
 ];
 
@@ -24,6 +24,8 @@ const FEATURE_IMPORTS = [
     ...FEATURE_IMPORTS,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}
