@@ -1,10 +1,11 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { ReallianceIdJwt } from './jwt';
 
 @Entity()
 export class User {
   @PrimaryColumn()
-  id: number;
+  id: string;
 
   @Column()
   @IsNotEmpty()
@@ -13,4 +14,15 @@ export class User {
   @Column({ unique: true })
   @IsEmail()
   username: string;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  static fromJwt(jwt: ReallianceIdJwt): User {
+    return {
+      id: jwt.sub,
+      displayName: jwt.name,
+      username: jwt.preferred_username,
+    };
+  }
 }

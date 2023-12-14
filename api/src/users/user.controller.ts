@@ -1,13 +1,15 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from './users.service';
+import { User } from './user.entity';
 
 @Controller()
 export class UserController {
-  constructor() {}
+  constructor(private userService: UsersService) {}
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  getProfile(): string {
-    return 'OK';
+  getProfile(@Request() req): Promise<User> {
+    return this.userService.findOneByJwt(req.user);
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { ReallianceIdJwt } from './jwt';
 
 @Injectable()
 export class UsersService {
@@ -11,12 +12,7 @@ export class UsersService {
   ) {}
 
   async create(user: User): Promise<User> {    
-    const dbUser = new User();
-    dbUser.id = user.id;
-    dbUser.username = user.username;
-    dbUser.displayName = user.displayName;
-
-    return this.usersRepository.save(dbUser);
+    return this.usersRepository.save(user);
   }
 
   findAll(): Promise<User[]> {
@@ -27,7 +23,17 @@ export class UsersService {
     return this.usersRepository.findOneBy(user);
   }
 
-  async remove(id: number): Promise<void> {
+  findOneByJwt(jwt: ReallianceIdJwt): Promise<User | null> {
+    return this.findOneBy({
+      id: jwt.sub,
+    });
+  }
+
+  async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async updateUser(id: string, newUser: Partial<User>): Promise<void> {
+    await this.usersRepository.update(id, newUser);
   }
 }
