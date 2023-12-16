@@ -4,19 +4,19 @@ import Cookies from 'js-cookie';
 const ISSUER = new URL('https://id.realliance.net/application/o/community/');
 const REDIRECT_URI = import.meta.env.PROD ? "https://profile.realliance.net" : "http://localhost:8080";
 
-const as = await oauth
+const as = oauth
   .discoveryRequest(ISSUER)
   .then((response) => oauth.processDiscoveryResponse(ISSUER, response));
 
 const client: oauth.Client = {
   client_id: 'LNXdUuOZUue5HPlw8Vyglo83sIYndFaGUCIdQrSZ',
   token_endpoint_auth_method: 'none',
-  }
+}
 
 export async function beginAuthFlow() {
+  const authServer = await as;
 
-
-  if (as.code_challenge_methods_supported?.includes('S256') !== true) {
+  if (authServer.code_challenge_methods_supported?.includes('S256') !== true) {
     // This example assumes S256 PKCE support is signalled
     // If it isn't supported, random `nonce` must be used for CSRF protection.
     throw new Error("S256 PKCE not supported");
@@ -29,7 +29,7 @@ export async function beginAuthFlow() {
   Cookies.remove('codeVerifier');
   Cookies.set('codeVerifier', code_verifier);
 
-  const authorizationUrl = new URL(as.authorization_endpoint!)
+  const authorizationUrl = new URL(authServer.authorization_endpoint!)
   authorizationUrl.searchParams.set('client_id', client.client_id)
   authorizationUrl.searchParams.set('code_challenge', code_challenge)
   authorizationUrl.searchParams.set('code_challenge_method', code_challenge_method)
@@ -41,8 +41,10 @@ export async function beginAuthFlow() {
 }
 
 export async function onRedirect(updateToken: (token: string) => void) {
+  const authServer = await as;
+
   const currentUrl = new URL(window.location.href);
-  const params = oauth.validateAuthResponse(as, client, currentUrl, oauth.skipStateCheck)
+  const params = oauth.validateAuthResponse(authServer, client, currentUrl, oauth.skipStateCheck)
   if (oauth.isOAuth2Error(params)) {
     console.log('error', params)
     throw new Error("Oauth2 Failed") // Handle OAuth 2.0 redirect error
@@ -52,7 +54,7 @@ export async function onRedirect(updateToken: (token: string) => void) {
   Cookies.remove('codeVerifier');
 
   const response = await oauth.authorizationCodeGrantRequest(
-    as,
+    authServer,
     client,
     params,
     REDIRECT_URI,
@@ -72,7 +74,7 @@ export async function onRedirect(updateToken: (token: string) => void) {
     window.history.pushState({path:newurl},'',newurl);
   }
 
-  const result = await oauth.processAuthorizationCodeOpenIDResponse(as, client, response)
+  const result = await oauth.processAuthorizationCodeOpenIDResponse(authServer, client, response)
   if (oauth.isOAuth2Error(result)) {
     console.log('error', result)
     throw new Error() // Handle OAuth 2.0 response body error
