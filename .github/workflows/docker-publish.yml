@@ -49,5 +49,5 @@ jobs:
           context: ./${{ matrix.service }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          file: Dockerfile
+          file: ./${{ matrix.service }}/Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
