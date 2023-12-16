@@ -1,7 +1,7 @@
 import * as oauth from 'oauth4webapi';
 import Cookies from 'js-cookie';
 
-const ISSUER = new URL('https://id.realliance.net/application/o/profile/');
+const ISSUER = new URL('https://id.realliance.net/application/o/community/');
 const REDIRECT_URI = import.meta.env.PROD ? "https://profile.realliance.net" : "http://localhost:8080";
 
 const as = await oauth
@@ -40,7 +40,7 @@ export async function beginAuthFlow() {
   window.location.href = authorizationUrl.toString();
 }
 
-export async function onRedirect() {
+export async function onRedirect(updateToken: (token: string) => void) {
   const currentUrl = new URL(window.location.href);
   const params = oauth.validateAuthResponse(as, client, currentUrl, oauth.skipStateCheck)
   if (oauth.isOAuth2Error(params)) {
@@ -67,21 +67,16 @@ export async function onRedirect() {
     throw new Error() // Handle www-authenticate challenges as needed
   }
 
+  if (window.history.pushState) {
+    var newurl = window.location.protocol + "//" + window.location.host;
+    window.history.pushState({path:newurl},'',newurl);
+  }
+
   const result = await oauth.processAuthorizationCodeOpenIDResponse(as, client, response)
   if (oauth.isOAuth2Error(result)) {
     console.log('error', result)
     throw new Error() // Handle OAuth 2.0 response body error
   }
 
-  console.log('result', result)
-  const claims = oauth.getValidatedIdTokenClaims(result)
-  console.log('ID Token Claims', claims)
-
-  const res = await fetch('http://localhost:3000/api/profile', {
-    headers: {
-      "Authorization": `Bearer ${result.access_token}`,
-    }
-  });
-
-  console.log(await res.text());
+  updateToken(result.access_token);
 }

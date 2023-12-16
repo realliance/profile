@@ -2,8 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Profile } from './Profile';
-import App from './App';
+import { ProfilePage } from './pages/Profile';
+import App from './pages/App';
+import { AuthContextProvider } from './contexts/AuthContext';
+import { loader as profileLoader } from './util/profile';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +15,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'user/:username',
-        element: <Profile />,
+        element: <ProfilePage />,
+        loader: profileLoader,
       }
     ]
   },
@@ -21,6 +24,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   </React.StrictMode>,
 )

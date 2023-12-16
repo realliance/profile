@@ -15,12 +15,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: 'https://id.realliance.net/application/o/profile/jwks/',
+        jwksUri: 'https://id.realliance.net/application/o/community/jwks/',
       }),
 
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: 'LNXdUuOZUue5HPlw8Vyglo83sIYndFaGUCIdQrSZ',
-      issuer: 'https://id.realliance.net/application/o/profile/',
+      issuer: 'https://id.realliance.net/application/o/community/',
       algorithms: ['RS256'],
     });
   }
