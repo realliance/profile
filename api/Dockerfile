@@ -12,6 +12,13 @@ FROM node:current
 
 WORKDIR /app
 
+ADD yarn.lock .
+ADD api/package.json .
+
+ENV NODE_ENV production
+
+RUN yarn install --focus
+
 COPY --from=builder /build/api/dist /app
 
 CMD [ "node", "main.js" ]
