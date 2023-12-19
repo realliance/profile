@@ -14,6 +14,8 @@ WORKDIR /app
 
 ADD yarn.lock .
 ADD api/package.json .
+ADD migrate.sh .
+ADD migration.config.mjs .
 
 ENV NODE_ENV production
 
@@ -21,4 +23,4 @@ RUN yarn install && yarn cache clean
 
 COPY --from=builder /build/api/dist /app
 
-CMD [ "node", "main.js" ]
+CMD [ "./migrate.sh", "&&", "node", "main.js" ]
