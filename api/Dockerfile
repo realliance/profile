@@ -24,4 +24,4 @@ RUN yarn install && yarn cache clean
 
 COPY --from=builder /build/api/dist /app
 
-CMD [ "./migrate.sh", "&&", "node", "main.js" ]
+CMD [ "node", "main.js" ]
