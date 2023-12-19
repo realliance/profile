@@ -2,7 +2,7 @@ import * as oauth from 'oauth4webapi';
 import Cookies from 'js-cookie';
 
 const ISSUER = new URL('https://id.realliance.net/application/o/community/');
-const REDIRECT_URI = import.meta.env.PROD ? "https://profile.realliance.net" : "http://localhost:8080";
+const REDIRECT_URI = import.meta.env.PROD ? "https://community.realliance.net" : "http://localhost:8080";
 
 const as = oauth
   .discoveryRequest(ISSUER)
