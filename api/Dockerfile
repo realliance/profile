@@ -17,7 +17,7 @@ ADD api/package.json .
 
 ENV NODE_ENV production
 
-RUN yarn install
+RUN yarn install && yarn cache clean
 
 COPY --from=builder /build/api/dist /app
 
