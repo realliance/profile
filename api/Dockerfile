@@ -14,8 +14,8 @@ WORKDIR /app
 
 ADD yarn.lock .
 ADD api/package.json .
-ADD migrate.sh .
-ADD migration.config.mjs .
+ADD api/migrate.sh .
+ADD api/migration.config.mjs .
 
 ENV NODE_ENV production
 
