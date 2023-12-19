@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-npx typeorm migration:run -d migration.config.mjs
+yarn typeorm migration:run -d migration.config.mjs
