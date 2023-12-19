@@ -8,6 +8,6 @@ export default new DataSource({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   migrations: [
-    "migrations/*.ts"
+    "migrations/*"
   ],
 });
