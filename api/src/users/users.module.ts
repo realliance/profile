@@ -14,7 +14,7 @@ import { PassportModule } from '@nestjs/passport';
   ],
   providers: [
     UsersService,
-    JwtStrategy
+    JwtStrategy,
   ],
   controllers: [UserController],
   exports: [UsersService],

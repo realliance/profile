@@ -6,6 +6,8 @@ import { ProfilePage } from './pages/Profile';
 import App from './pages/App';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { loader as profileLoader } from './util/profile';
+import { GroupList } from './pages/GroupList';
+import { loadAllGroups } from './util/group';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +15,11 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <div>Not found</div>,
     children: [
+      {
+        path: '/',
+        element: <GroupList />,
+        loader: loadAllGroups,
+      },
       {
         path: 'user/:username',
         element: <ProfilePage />,

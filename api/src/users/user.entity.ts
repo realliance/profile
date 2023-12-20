@@ -1,6 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
 import { ReallianceIdJwt } from './jwt';
+import { Group } from '../groups/group.entity';
 
 @Entity()
 export class User {
@@ -18,11 +19,21 @@ export class User {
   @Column({ nullable: true })
   description?: string;
 
+  @Column()
+  @IsNotEmpty()
+  admin: boolean;
+
+  @ManyToMany(() => Group, (group) => group.users)
+  @JoinTable()
+  groups: Group[];
+
   static fromJwt(jwt: ReallianceIdJwt): User {
     return {
       id: jwt.sub,
       displayName: jwt.name,
       username: jwt.preferred_username,
+      groups: [],
+      admin: jwt.groups.includes("Community Admin"),
     };
   }
 }

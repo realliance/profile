@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './db';
 import { UsersModule } from './users/users.module';
+import { GroupsModule } from './groups/group.module';
+import { Group } from './groups/group.entity';
+import { User } from './users/user.entity';
 
 // 3rd Party Modules
 const LIBRARY_IMPORTS = [
@@ -15,6 +18,7 @@ const LIBRARY_IMPORTS = [
 // Application Feature Imports
 const FEATURE_IMPORTS = [
   UsersModule,
+  GroupsModule,
 ];
 
 // App Module Configuration

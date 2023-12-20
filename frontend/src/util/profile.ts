@@ -6,6 +6,7 @@ export interface Profile {
    displayName: string;
    username: string;
    description: string; 
+   admin: boolean;
 }
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<Profile | undefined> {

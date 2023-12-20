@@ -1,4 +1,4 @@
-import { DarkThemeToggle, Footer, Navbar } from "flowbite-react"
+import { Badge, DarkThemeToggle, Footer, Navbar } from "flowbite-react"
 import { beginAuthFlow, onRedirect } from "../util/oauth"
 import { useContext, useEffect, useMemo } from "react"
 import { Link, Outlet, useNavigation } from "react-router-dom";
@@ -20,7 +20,7 @@ function App() {
     if (loading) {
       return <div className="w-32 h-8 mt-1 animate-pulse dark:bg-gray-600 bg-zinc-100 rounded" />
     } else if (profile) {
-      return <Navbar.Link as={Link} to={`/user/${profile.username}`}>{profile.displayName}</Navbar.Link>
+      return <Navbar.Link as={Link} to={`/user/${profile.username}`}>{profile.displayName} {profile.admin && <Badge color="info">Admin</Badge> }</Navbar.Link>
     } else {
       return <Navbar.Link href="#" onClick={() => beginAuthFlow()}>Login</Navbar.Link>
     }
