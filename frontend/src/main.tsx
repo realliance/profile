@@ -4,7 +4,7 @@ import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ProfilePage } from './pages/Profile';
 import App from './pages/App';
-import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
+import { AuthContextProvider } from './contexts/AuthContext';
 import { loader as profileLoader } from './util/user';
 import { GroupList } from './pages/GroupList';
 import { loadAllGroups, loadGroup } from './util/group';
