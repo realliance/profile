@@ -10,8 +10,8 @@ export class GroupsService {
     private groupsRepository: Repository<Group>,
   ) {}
 
-  async create(group: Omit<Group, 'id'>): Promise<Group> {    
-    return this.groupsRepository.save(group);
+  async create(group: Omit<Group, 'id'>): Promise<Group> {
+    return await this.groupsRepository.save(group);
   }
 
   findAll(): Promise<Group[]> {
