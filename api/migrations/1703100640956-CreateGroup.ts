@@ -16,7 +16,6 @@ export class CreateGroup1703100640956 implements MigrationInterface {
           {
             name: 'name',
             type: 'varchar',
-            isUnique: true,
           },
         ],
       }),
