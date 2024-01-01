@@ -8,7 +8,7 @@ export class CreateGroup1703100640956 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'uuid',
             isPrimary: true,
             isGenerated: true,
             generationStrategy: 'uuid',
