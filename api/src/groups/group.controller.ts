@@ -1,4 +1,12 @@
-import { Controller, Request, Get, UseGuards, Param, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Get,
+  UseGuards,
+  Param,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GroupsService } from './group.service';
 import { Group } from './group.entity';
@@ -9,7 +17,10 @@ import { AdminGuard } from 'src/admin/admin.guard';
 
 @Controller()
 export class GroupController {
-  constructor(private groupService: GroupsService, private userService: UsersService) {}
+  constructor(
+    private groupService: GroupsService,
+    private userService: UsersService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id')
@@ -32,16 +43,17 @@ export class GroupController {
   @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id/members')
   groupMembers(@Param() params: any): Promise<User[]> {
-    return this.groupService.findOneBy({ id: params.id }).then((group) => group.users);
+    return this.groupService
+      .findOneBy({ id: params.id })
+      .then((group) => group.users);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id/join')
   join(@Request() req, @Param() params: any): Promise<void> {
-    return this.groupService.findOneBy({ id: params.id })
-        .then((group) => {
-            const groups = [...req.user.groups, group];
-            return this.userService.updateUser(req.user.id, { groups: groups });
-        });
+    return this.groupService.findOneBy({ id: params.id }).then((group) => {
+      const groups = [...req.user.groups, group];
+      return this.userService.updateUser(req.user.id, { groups: groups });
+    });
   }
 }
