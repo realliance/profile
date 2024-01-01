@@ -8,14 +8,15 @@ export class CreateGroup1703100640956 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'varchar',
             isPrimary: true,
             isGenerated: true,
-            generationStrategy: 'increment',
+            generationStrategy: 'uuid',
           },
           {
             name: 'name',
             type: 'varchar',
+            isUnique: true,
           },
         ],
       }),
@@ -28,12 +29,12 @@ export class CreateGroup1703100640956 implements MigrationInterface {
         columns: [
           {
             name: 'userId',
-            type: 'int',
+            type: 'varchar',
             isPrimary: true,
           },
           {
             name: 'groupId',
-            type: 'int',
+            type: 'varchar',
             isPrimary: true,
           },
         ],
