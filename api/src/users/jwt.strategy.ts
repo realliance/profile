@@ -9,7 +9,10 @@ import { User } from './user.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private configService: ConfigService, private userService: UsersService) {
+  constructor(
+    private configService: ConfigService,
+    private userService: UsersService,
+  ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -28,21 +31,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   validate(payload: unknown): unknown {
     const jwt = payload as ReallianceIdJwt;
 
-    this.userService.findOneByJwt(jwt).then((user) => {
-      if (user) {
-        console.log("Updating user against JWT");
-        this.userService.updateUser(user.id, {
-          displayName: jwt.name,
-          username: jwt.preferred_username,
-        });
-      } else {
-        console.log("Bootstrapping new user");
-        this.userService.create(User.fromJwt(jwt));
-      }
-    }).catch((e) => {
-      console.error("Error on finding user", e);
-    });
-    
+    this.userService
+      .findOneByJwt(jwt)
+      .then((user) => {
+        if (user) {
+          console.log('Updating user against JWT');
+          this.userService.updateUser(user.id, {
+            displayName: jwt.name,
+            username: jwt.preferred_username,
+            admin: User.fromJwt(jwt).admin,
+          });
+        } else {
+          console.log('Bootstrapping new user');
+          this.userService.create(User.fromJwt(jwt));
+        }
+      })
+      .catch((e) => {
+        console.error('Error on finding user', e);
+      });
+
     return jwt as unknown;
   }
 }
