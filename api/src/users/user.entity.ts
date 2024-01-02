@@ -33,7 +33,7 @@ export class User {
       displayName: jwt.name,
       username: jwt.preferred_username,
       groups: [],
-      admin: jwt.groups.includes("Community Admin"),
+      admin: jwt.groups?.includes('Community Admin') ?? false,
     };
   }
 }
