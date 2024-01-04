@@ -50,21 +50,22 @@ export class GroupController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('groups/:id/join')
-  async join(@Request() req, @Param() params: any): Promise<[void, void]> {
-    const id = req.user.id;
+  async join(@Request() req, @Param() params: any): Promise<Group> {
+    const id = req.user.sub;
 
     if (!id) {
       throw new Error('User session not found, cannot join group');
     }
 
+    const user = await this.userService.findOneBy({ id });
     const group = await this.groupService.findOneBy({ id: params.id });
-    return Promise.all([
-      this.userService.updateUser(id, {
-        groups: [...req.user.groups, group],
-      }),
-      this.groupService.updateGroup(group.id, {
-        users: [...group.users, req.user],
-      }),
-    ]);
+    if (group.users.find((user) => user.id === user.id)) {
+      return group;
+    }
+
+    group.users = group.users ?? [];
+    group.users.push(user);
+
+    return this.groupService.updateGroup(group);
   }
 }

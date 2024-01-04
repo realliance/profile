@@ -22,15 +22,18 @@ export class GroupsService {
     return this.groupsRepository.find();
   }
 
-  findOneBy(Group: Partial<Group>): Promise<Group | null> {
-    return this.groupsRepository.findOneBy(Group);
+  async findOneBy(group: Partial<Group>): Promise<Group | null> {
+    return this.groupsRepository.findOne({
+      where: group,
+      relations: ['users'],
+    });
   }
 
   async remove(id: string): Promise<void> {
     await this.groupsRepository.delete(id);
   }
 
-  async updateGroup(id: string, newGroup: Partial<Group>): Promise<void> {
-    await this.groupsRepository.update(id, newGroup);
+  async updateGroup(newGroup: Group): Promise<Group> {
+    return this.groupsRepository.save(newGroup);
   }
 }

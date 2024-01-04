@@ -30,3 +30,12 @@ export const createGroup = (token: string, group: Omit<Group, 'id'>) =>
     method: 'POST',
     body: JSON.stringify(group),
   });
+
+export const joinGroup = (token: string, groupId: string) =>
+  fetch(`${API_URL}/groups/${groupId}/join`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  });
