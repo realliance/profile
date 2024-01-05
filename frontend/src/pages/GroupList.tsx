@@ -1,9 +1,9 @@
 import { Link, useLoaderData } from 'react-router-dom';
-import { Group } from '../util/group';
 import { useContext, useMemo } from 'react';
 import { HiMiniPlus } from 'react-icons/hi2';
 import { AuthContext } from '../contexts/AuthContext';
 import { Card } from 'flowbite-react';
+import { Group } from '../util/api';
 
 export function GroupList() {
   const { profile } = useContext(AuthContext);
