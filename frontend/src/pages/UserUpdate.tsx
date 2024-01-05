@@ -56,6 +56,7 @@ function CannotBeModifiedHelperText() {
 
 interface EventTargets {
   description: Value<string>;
+  pronouns: Value<string>;
 }
 
 export function UserUpdate() {
@@ -64,6 +65,7 @@ export function UserUpdate() {
   const navigate = useNavigate();
 
   const [description, setDescription] = useState<string | undefined>(undefined);
+  const [pronouns, setPronouns] = useState<string | undefined>(undefined);
 
   const allowUserEdit = canEdit(profile, user?.username);
 
@@ -73,15 +75,23 @@ export function UserUpdate() {
     }
   }, [description, user.description]);
 
+  useEffect(() => {
+    if (pronouns === undefined && user.pronouns) {
+      setPronouns(user.pronouns ?? '');
+    }
+  }, [pronouns, user.pronouns]);
+
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (token) {
         const eventTargets = e.target as unknown as EventTargets;
         const description = eventTargets.description.value;
+        const pronouns = eventTargets.pronouns.value;
 
         const { error } = await updateUser(token, user.username, {
           description,
+          pronouns,
         });
         if (error) {
           console.error(error);
@@ -112,6 +122,13 @@ export function UserUpdate() {
             value={user.displayName}
             disabled={true}
             helperText={<CannotBeModifiedHelperText />}
+          />
+          <TextInputWithLabel
+            id="pronouns"
+            name="Pronouns"
+            placeholder="they/them"
+            value={pronouns}
+            onChange={setPronouns}
           />
           <div>
             <div className="mb-2 block">

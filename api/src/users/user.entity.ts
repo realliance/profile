@@ -5,6 +5,7 @@ import { Group } from '../groups/group.entity';
 
 export class UpdateUser {
   description?: string;
+  pronouns?: string;
 }
 
 @Entity()
@@ -22,6 +23,9 @@ export class User {
 
   @Column({ nullable: true })
   description?: string;
+
+  @Column({ nullable: true })
+  pronouns?: string;
 
   @Column()
   @IsNotEmpty()

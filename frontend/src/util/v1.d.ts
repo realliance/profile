@@ -39,6 +39,7 @@ export interface components {
       displayName: string;
       username: string;
       description?: string;
+      pronouns?: string;
       admin: boolean;
       groups: components["schemas"]["Group"][];
     };
@@ -49,6 +50,7 @@ export interface components {
     };
     UpdateUser: {
       description?: string;
+      pronouns?: string;
     };
     NewGroup: {
       name: string;

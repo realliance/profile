@@ -7,6 +7,7 @@ interface TextInputWithLabelProps {
   required?: boolean;
   disabled?: boolean;
   value?: string;
+  onChange?: (e: string) => void;
   helperText?: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ export function TextInputWithLabel({
   disabled,
   value,
   helperText,
+  onChange,
 }: TextInputWithLabelProps) {
   return (
     <div>
@@ -31,6 +33,11 @@ export function TextInputWithLabel({
         disabled={disabled}
         value={value}
         helperText={helperText}
+        onChange={(e) => {
+          if (onChange) {
+            onChange(e.target.value);
+          }
+        }}
       />
     </div>
   );

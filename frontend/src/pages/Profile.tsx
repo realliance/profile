@@ -15,8 +15,13 @@ export function ProfilePage() {
   );
 
   return (
-    <div className="container mx-auto flex flex-col gap-3">
-      <h1 className="text-6xl font-bold">{profile.displayName}</h1>
+    <div className="container mx-auto max-w-4xl flex flex-col gap-3">
+      <h1 className="text-6xl font-bold flex flex-row gap-2">
+        <span>{profile.displayName}</span>
+        <span className="italic text-xl">
+          {profile.pronouns ? `(${profile.pronouns})` : null}
+        </span>
+      </h1>
       <h2 className="text-2xl italic">user/{profile.username}</h2>
       {edit && (
         <Link
