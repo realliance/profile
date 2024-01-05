@@ -1,41 +1,75 @@
-import { Group } from './group';
+import createClient from 'openapi-fetch';
+import type { paths, components } from './v1.d.ts';
 
-export const API_URL = import.meta.env.PROD
-  ? '/api'
-  : 'http://localhost:3000/api';
+const API_URL = import.meta.env.PROD ? '' : 'http://localhost:3000';
+
+export type Group = components['schemas']['Group'];
+export type User = components['schemas']['User'];
+export type NewGroup = components['schemas']['NewGroup'];
+export type UpdateUser = components['schemas']['UpdateUser'];
+
+const { GET, POST, PATCH } = createClient<paths>({ baseUrl: API_URL });
 
 export const profile = (token: string) =>
-  fetch(`${API_URL}/profile`, {
+  GET('/api/profile', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-export const user = (username: string) => fetch(`${API_URL}/user/${username}`);
+export const user = (username: string) =>
+  GET('/api/user/{username}', {
+    params: {
+      path: {
+        username,
+      },
+    },
+  });
+
+export const updateUser = (token: string, username: string, body: UpdateUser) =>
+  PATCH('/api/user/{username}', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      path: {
+        username,
+      },
+    },
+    body,
+  });
+
 export const group = (token: string, id: string) =>
-  fetch(`${API_URL}/groups/${id}`, {
+  GET('/api/groups/{id}', {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+    },
+    params: {
+      path: {
+        id,
+      },
     },
   });
-export const groups = () => fetch(`${API_URL}/groups`);
 
-export const createGroup = (token: string, group: Omit<Group, 'id'>) =>
-  fetch(`${API_URL}/groups`, {
+export const groups = () => GET('/api/groups');
+
+export const createGroup = (token: string, body: NewGroup) =>
+  POST('/api/groups', {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    method: 'POST',
-    body: JSON.stringify(group),
+    body,
   });
 
-export const joinGroup = (token: string, groupId: string) =>
-  fetch(`${API_URL}/groups/${groupId}/join`, {
+export const joinGroup = (token: string, id: string) =>
+  POST('/api/groups/{id}/join', {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
     },
-    method: 'POST',
+    params: {
+      path: {
+        id,
+      },
+    },
   });

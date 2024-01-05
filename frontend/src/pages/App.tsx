@@ -19,11 +19,15 @@ function App() {
   const profileItem = useMemo(() => {
     if (loading) {
       return (
-        <div className="w-32 h-8 mt-1 animate-pulse dark:bg-gray-600 bg-zinc-100 rounded" />
+        <div className="w-32 h-6 mt-1 animate-pulse dark:bg-gray-600 bg-zinc-100 rounded" />
       );
     } else if (profile) {
       return (
-        <Navbar.Link as={Link} to={`/user/${profile.username}`}>
+        <Navbar.Link
+          as={Link}
+          to={`/user/${profile.username}`}
+          className="flex flex-row gap-2 self-center"
+        >
           {profile.displayName}{' '}
           {profile.admin && <Badge color="info">Admin</Badge>}
         </Navbar.Link>

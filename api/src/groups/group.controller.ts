@@ -9,11 +9,25 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GroupsService } from './group.service';
-import { Group } from './group.entity';
+import { Group, NewGroup } from './group.entity';
 import { AdminRoute } from 'src/admin/admin.decorator';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { AdminGuard } from 'src/admin/admin.guard';
+import { GetByIdParameter } from 'src/utils/types';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiParamOptions,
+} from '@nestjs/swagger';
+
+const groupIdParam: ApiParamOptions = {
+  name: 'id',
+  required: true,
+  type: 'string',
+  description: 'Group Id',
+};
 
 @Controller()
 export class GroupController {
@@ -24,7 +38,9 @@ export class GroupController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id')
-  getById(@Param() params: any): Promise<Group> {
+  @ApiParam(groupIdParam)
+  @ApiBearerAuth()
+  getById(@Param() params: GetByIdParameter): Promise<Group> {
     return this.groupService.findOneBy({ id: params.id });
   }
 
@@ -36,13 +52,21 @@ export class GroupController {
   @Post('groups')
   @AdminRoute()
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
+  @ApiBody({
+    required: true,
+    type: NewGroup,
+    description: 'New Group, can omit id',
+  })
   createGroup(@Body() newGroup: Omit<Group, 'id'>): Promise<Group> {
     return this.groupService.create(newGroup);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id/members')
-  groupMembers(@Param() params: any): Promise<User[]> {
+  @ApiBearerAuth()
+  @ApiParam(groupIdParam)
+  groupMembers(@Param() params: GetByIdParameter): Promise<User[]> {
     return this.groupService
       .findOneBy({ id: params.id })
       .then((group) => group.users);
@@ -50,7 +74,12 @@ export class GroupController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('groups/:id/join')
-  async join(@Request() req, @Param() params: any): Promise<Group> {
+  @ApiBearerAuth()
+  @ApiParam(groupIdParam)
+  async join(
+    @Request() req,
+    @Param() params: GetByIdParameter,
+  ): Promise<Group> {
     const id = req.user.sub;
 
     if (!id) {

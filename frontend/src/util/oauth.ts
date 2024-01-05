@@ -28,8 +28,9 @@ export async function beginAuthFlow() {
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier);
   const code_challenge_method = 'S256';
 
-  Cookies.remove('codeVerifier');
-  Cookies.set('codeVerifier', code_verifier);
+  if (!Cookies.set('codeVerifier', code_verifier)) {
+    throw new Error('Error setting cookie');
+  }
 
   const authorizationUrl = new URL(authServer.authorization_endpoint!);
   authorizationUrl.searchParams.set('client_id', client.client_id);
@@ -61,11 +62,10 @@ export async function onRedirect(updateToken: (token: string) => void) {
   }
 
   const codeVerifier = Cookies.get('codeVerifier');
-  Cookies.remove('codeVerifier');
-
   if (!codeVerifier) {
     throw new Error('Code Verified was empty');
   }
+  Cookies.remove('codeVerifier');
 
   const response = await oauth.authorizationCodeGrantRequest(
     authServer,

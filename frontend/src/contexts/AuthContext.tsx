@@ -1,10 +1,9 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
-import { profile as getProfile } from '../util/api';
+import { User, profile as getProfile } from '../util/api';
 import { useCookies } from 'react-cookie';
 import { decodeJwt, JWTPayload } from 'jose';
-import { User } from '../util/user';
 
-const MIN_WAIT_MS = 500;
+const MIN_WAIT_MS = 200;
 
 export interface AuthedContext {
   loading: boolean;
@@ -49,10 +48,6 @@ export function AuthContextProvider({ children }: AuthContextProps) {
         console.warn('Failure while syncing token and cookies', e);
         removeCookie('token');
       }
-      // A load attempted, and no token, make sure no cookie
-    } else if (!loading && !token && cookies.token) {
-      console.log('Clearing Cookie');
-      removeCookie('token');
     } else if (!loading && token && !cookies.token) {
       console.log('Updated token');
       setCookie('token', token, {
@@ -66,15 +61,19 @@ export function AuthContextProvider({ children }: AuthContextProps) {
       console.log('Getting profile claims');
       const run = async () => {
         const now = Date.now();
-        const res = await getProfile(token);
+        const { data, error } = await getProfile(token);
 
-        const json = await res.json();
+        if (error) {
+          console.error(error);
+          return;
+        }
+
         const diff = Date.now() - now;
         const minWait = MIN_WAIT_MS - diff;
         const wait = Math.max(0, minWait);
 
         setTimeout(() => {
-          setProfile(json);
+          setProfile(data);
           setLoading(false);
         }, wait);
       };

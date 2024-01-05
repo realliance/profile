@@ -1,23 +1,22 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
-import { user } from './api';
-
-export interface User {
-  id: string;
-  displayName: string;
-  username: string;
-  description: string;
-  admin: boolean;
-}
+import { User, user } from './api';
 
 export async function loader({
   params,
-}: LoaderFunctionArgs): Promise<User | undefined> {
+}: LoaderFunctionArgs): Promise<User | null> {
   if (params.username) {
-    const res = await user(params.username);
-    if (res.status === 200) {
-      return (await res.json()) as User;
+    const { data, error } = await user(params.username);
+    if (error) {
+      console.error(error);
+      return null;
     }
+
+    return data;
   }
 
-  return undefined;
+  return null;
+}
+
+export function canEdit(profile: User | undefined, userToEdit: string) {
+  return profile?.username === userToEdit || profile?.admin;
 }

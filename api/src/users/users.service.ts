@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { ReallianceIdJwt } from './jwt';
 
@@ -11,7 +11,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(user: User): Promise<User> {    
+  async create(user: User): Promise<User> {
     return this.usersRepository.save(user);
   }
 
@@ -33,7 +33,10 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async updateUser(id: string, newUser: Partial<User>): Promise<void> {
+  async updateUser(
+    id: string | FindOptionsWhere<User>,
+    newUser: Partial<User>,
+  ): Promise<void> {
     await this.usersRepository.update(id, newUser);
   }
 }

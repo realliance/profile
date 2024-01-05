@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { ProfilePage } from './pages/Profile';
 import App from './pages/App';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { loader as profileLoader } from './util/user';
@@ -10,12 +9,15 @@ import { GroupList } from './pages/GroupList';
 import { loadAllGroups, loadGroup } from './util/group';
 import { GroupNew } from './pages/GroupNew';
 import { GroupShow } from './pages/GroupShow';
+import { Error } from './pages/Error';
+import { UserUpdate } from './pages/UserUpdate';
+import { ProfilePage } from './pages/Profile';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <div>Not found</div>,
+    errorElement: <Error />,
     children: [
       {
         path: '/',
@@ -34,6 +36,11 @@ const router = createBrowserRouter([
       {
         path: 'user/:username',
         element: <ProfilePage />,
+        loader: profileLoader,
+      },
+      {
+        path: 'user/:username/edit',
+        element: <UserUpdate />,
         loader: profileLoader,
       },
     ],

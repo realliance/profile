@@ -1,12 +1,10 @@
-import { Button, Label, TextInput } from 'flowbite-react';
+import { Button } from 'flowbite-react';
 import { FormEvent, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { createNewGroup } from '../util/group';
-
-interface Value<T> {
-  value: T;
-}
+import { TextInputWithLabel } from '../components/TextInputWithLabel';
+import { Value } from '../util/events';
 
 interface EventTargets {
   name: Value<string>;
@@ -45,12 +43,7 @@ export function GroupNew() {
     <div className="container max-w-xl mx-auto flex flex-col gap-3">
       <h1 className="text-4xl font-bold">New Group</h1>
       <form className="flex max-w-md flex-col gap-4" onSubmit={onSubmit}>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="name" value="Name" />
-          </div>
-          <TextInput id="name" required />
-        </div>
+        <TextInputWithLabel id="name" name="Name" required />
         <Button type="submit" disabled={loading}>
           Submit
         </Button>

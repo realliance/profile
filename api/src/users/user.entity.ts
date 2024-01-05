@@ -3,6 +3,10 @@ import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
 import { ReallianceIdJwt } from './jwt';
 import { Group } from '../groups/group.entity';
 
+export class UpdateUser {
+  description?: string;
+}
+
 @Entity()
 export class User {
   @PrimaryColumn()

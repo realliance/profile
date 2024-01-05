@@ -1,50 +1,48 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
-import { createGroup, group, groups } from './api';
-import { User } from './user';
+import { Group, createGroup, group, groups } from './api';
 import Cookies from 'js-cookie';
 
-export interface Group {
-  id: string;
-  name: string;
-  users: User[];
-}
-
 export async function loadAllGroups(): Promise<Group[] | undefined> {
-  const res = await groups();
-  if (res.status === 200) {
-    return (await res.json()) as Group[];
+  const { data, error } = await groups();
+  if (error) {
+    console.warn(error);
+    return undefined;
   }
 
-  return undefined;
+  return data;
 }
 
 export async function createNewGroup(
   token: string,
   name: string,
 ): Promise<Group | undefined> {
-  const res = await createGroup(token, {
+  const { data, error } = await createGroup(token, {
     name,
-    users: [],
   });
 
-  if (res.status === 201) {
-    return (await res.json()) as Group;
+  if (error) {
+    console.warn(error);
+    return undefined;
   }
 
-  return undefined;
+  return data;
 }
 
 export async function loadGroup({
   params,
-}: LoaderFunctionArgs): Promise<Group | undefined> {
+}: LoaderFunctionArgs): Promise<Group | null> {
   if (params.id) {
     const token = Cookies.get('token');
 
-    const res = await group(token ?? '', params.id);
-    if (res.status === 200) {
-      return (await res.json()) as Group;
+    const { data, error } = await group(token ?? '', params.id);
+
+    if (error) {
+      console.warn(error);
+      return null;
     }
+
+    return data;
   }
 
-  return undefined;
+  return null;
 }
