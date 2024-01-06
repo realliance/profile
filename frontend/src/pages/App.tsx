@@ -1,18 +1,20 @@
 import { Badge, DarkThemeToggle, Footer, Navbar } from 'flowbite-react';
-import { beginAuthFlow, onRedirect } from '../util/oauth';
+import { ReallianceProvider, useOIDCProvider } from '../util/oidc';
 import { useContext, useEffect, useMemo } from 'react';
 import { Link, Outlet, useNavigation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 function App() {
   const { profile, loading, updateToken } = useContext(AuthContext);
+  const { beginFlow, completeFlow } = useOIDCProvider(ReallianceProvider);
+
   const navigation = useNavigation();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('code') !== null) {
-      onRedirect(updateToken);
+      completeFlow(updateToken);
     }
   }, []);
 
@@ -34,12 +36,12 @@ function App() {
       );
     } else {
       return (
-        <Navbar.Link href="#" onClick={() => beginAuthFlow()}>
+        <Navbar.Link href="#" onClick={() => beginFlow()}>
           Login
         </Navbar.Link>
       );
     }
-  }, [profile, loading]);
+  }, [profile, loading, beginFlow]);
 
   return (
     <div className="flex flex-col min-h-screen">

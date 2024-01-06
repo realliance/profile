@@ -6,30 +6,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './db';
 import { UsersModule } from './users/users.module';
 import { GroupsModule } from './groups/group.module';
-import { Group } from './groups/group.entity';
-import { User } from './users/user.entity';
+import { ConnectionsModule } from './connections/connections.module';
 
 // 3rd Party Modules
 const LIBRARY_IMPORTS = [
-  ConfigModule.forRoot({ cache: true, isGlobal: true, envFilePath: [".env", ".env.development"] }),
+  ConfigModule.forRoot({
+    cache: true,
+    isGlobal: true,
+    envFilePath: ['.env', '.env.development'],
+  }),
   TypeOrmModule.forRoot(getDatabaseConfig()),
 ];
 
 // Application Feature Imports
-const FEATURE_IMPORTS = [
-  UsersModule,
-  GroupsModule,
-];
+const FEATURE_IMPORTS = [UsersModule, GroupsModule];
 
 // App Module Configuration
 @Module({
-  imports: [
-    ...LIBRARY_IMPORTS,
-    ...FEATURE_IMPORTS,
-  ],
+  imports: [...LIBRARY_IMPORTS, ...FEATURE_IMPORTS],
   controllers: [AppController],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

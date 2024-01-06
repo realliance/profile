@@ -39,6 +39,18 @@ export const updateUser = (token: string, username: string, body: UpdateUser) =>
     body,
   });
 
+export const addMinecraftToUser = (token: string, msToken: string) =>
+  POST('/api/connections/minecraft', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      header: {
+        MS_Authorization: msToken,
+      },
+    },
+  });
+
 export const group = (token: string, id: string) =>
   GET('/api/groups/{id}', {
     headers: {

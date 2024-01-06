@@ -20,7 +20,10 @@ export class UsersService {
   }
 
   findOneBy(user: Partial<User>): Promise<User | null> {
-    return this.usersRepository.findOneBy(user);
+    return this.usersRepository.findOne({
+      where: user,
+      relations: ['connections'],
+    });
   }
 
   findOneByJwt(jwt: ReallianceIdJwt): Promise<User | null> {

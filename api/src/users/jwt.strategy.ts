@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { passportJwtSecret } from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ReallianceIdJwt } from './jwt';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
+import { ConnectionsService } from 'src/connections/connections.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
     private userService: UsersService,
+    private connectionService: ConnectionsService,
   ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
@@ -36,6 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       .then((user) => {
         if (user) {
           console.log('Updating user against JWT');
+          this.connectionService.saveForUser(user);
           this.userService.updateUser(user.id, {
             displayName: jwt.name,
             username: jwt.preferred_username,
@@ -43,7 +44,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           });
         } else {
           console.log('Bootstrapping new user');
-          this.userService.create(User.fromJwt(jwt));
+          const user = User.fromJwt(jwt);
+          this.connectionService.saveForUser(user);
+          this.userService.create(user);
         }
       })
       .catch((e) => {

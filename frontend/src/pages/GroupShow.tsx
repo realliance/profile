@@ -3,17 +3,18 @@ import { Button } from 'flowbite-react';
 import { Group, joinGroup } from '../util/api';
 import { useContext, useEffect, useMemo } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { beginAuthFlow } from '../util/oauth';
+import { ReallianceProvider, useOIDCProvider } from '../util/oidc';
 
 export function GroupShow() {
   const { token, profile } = useContext(AuthContext);
+  const { beginFlow } = useOIDCProvider(ReallianceProvider);
   const group = useLoaderData() as Group;
 
   useEffect(() => {
     if (!group && !token) {
-      beginAuthFlow();
+      beginFlow();
     }
-  }, [group, token]);
+  }, [group, token, beginFlow]);
 
   const joined = useMemo(
     () => group?.users?.some((user) => user.id === profile?.id),

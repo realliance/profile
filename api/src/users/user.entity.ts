@@ -1,7 +1,16 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { ReallianceIdJwt } from './jwt';
 import { Group } from '../groups/group.entity';
+import { Connection } from 'src/connections/connection.entity';
 
 export class UpdateUser {
   description?: string;
@@ -34,6 +43,10 @@ export class User {
   @ManyToMany(() => Group, (group) => group.users)
   @JoinTable()
   groups: Group[];
+
+  @OneToOne(() => Connection)
+  @JoinColumn()
+  connections?: Connection;
 
   static fromJwt(jwt: ReallianceIdJwt): User {
     return {

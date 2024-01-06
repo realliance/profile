@@ -12,6 +12,7 @@ import { GroupShow } from './pages/GroupShow';
 import { Error } from './pages/Error';
 import { UserUpdate } from './pages/UserUpdate';
 import { ProfilePage } from './pages/Profile';
+import { MinecraftConnection } from './pages/MinecraftConnection';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         path: 'user/:username/edit',
         element: <UserUpdate />,
         loader: profileLoader,
+      },
+      {
+        path: 'minecraft',
+        element: <MinecraftConnection />,
       },
     ],
   },

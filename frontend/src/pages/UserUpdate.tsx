@@ -13,6 +13,7 @@ import { TextInputWithLabel } from '../components/TextInputWithLabel';
 import { Button, Label, Textarea } from 'flowbite-react';
 import { Value } from '../util/events';
 import { canEdit } from '../util/user';
+import { MicrosoftProvider, useOIDCProvider } from '../util/oidc';
 
 function LoadingAnimation() {
   return (
@@ -61,6 +62,7 @@ interface EventTargets {
 
 export function UserUpdate() {
   const { loading, profile, token } = useContext(AuthContext);
+  const { beginFlow: beginMsFlow } = useOIDCProvider(MicrosoftProvider);
   const user = useLoaderData() as User;
   const navigate = useNavigate();
 
@@ -148,7 +150,7 @@ export function UserUpdate() {
         </form>
       </>
     ),
-    [user, onSubmit, description, setDescription],
+    [user, onSubmit, description, setDescription, pronouns],
   );
 
   const content = useMemo(
@@ -166,6 +168,9 @@ export function UserUpdate() {
   return (
     <div className="container max-w-2xl mx-auto flex flex-col gap-3">
       {content}
+      <hr />
+      <h1 className="text-2xl">Connections</h1>
+      <Button onClick={() => beginMsFlow()}>Connect Minecraft</Button>
     </div>
   );
 }

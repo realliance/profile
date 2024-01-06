@@ -15,6 +15,9 @@ export interface paths {
     get: operations["UserController_getOneUser"];
     patch: operations["UserController_updateUser"];
   };
+  "/api/connections/minecraft": {
+    post: operations["ConnectionController_addMinecraft"];
+  };
   "/api/groups/{id}": {
     get: operations["GroupController_getById"];
   };
@@ -34,6 +37,10 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    Connection: {
+      id: string;
+      minecraft_uuid?: string;
+    };
     User: {
       id: string;
       displayName: string;
@@ -42,6 +49,7 @@ export interface components {
       pronouns?: string;
       admin: boolean;
       groups: components["schemas"]["Group"][];
+      connections?: components["schemas"]["Connection"];
     };
     Group: {
       id: string;
@@ -117,6 +125,18 @@ export interface operations {
     };
     responses: {
       200: {
+        content: never;
+      };
+    };
+  };
+  ConnectionController_addMinecraft: {
+    parameters: {
+      header?: {
+        MS_Authorization?: string;
+      };
+    };
+    responses: {
+      201: {
         content: never;
       };
     };
