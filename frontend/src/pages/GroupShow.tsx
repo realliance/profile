@@ -16,7 +16,7 @@ export function GroupShow() {
   }, [group, token]);
 
   const joined = useMemo(
-    () => group?.users?.find((user) => user.id === profile?.id) !== null,
+    () => group?.users?.some((user) => user.id === profile?.id),
     [group, profile],
   );
 
