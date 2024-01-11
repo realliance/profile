@@ -7,7 +7,7 @@ export class CreateConnection1704497190499 implements MigrationInterface {
         name: 'connection',
         columns: [
           {
-            name: 'id',
+            name: 'userId',
             type: 'varchar',
             isPrimary: true,
           },
