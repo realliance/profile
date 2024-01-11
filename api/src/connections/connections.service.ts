@@ -11,7 +11,13 @@ export class ConnectionsService {
     private connectionsRepository: Repository<Connection>,
   ) {}
 
-  async saveForUser(user: User): Promise<Connection> {
-    return this.connectionsRepository.save({ id: user.id });
+  async saveForUser(
+    user: User,
+    connection: Omit<Connection, 'userId'>,
+  ): Promise<Connection> {
+    return await this.connectionsRepository.save({
+      ...connection,
+      userId: user.id,
+    });
   }
 }

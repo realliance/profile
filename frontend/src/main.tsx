@@ -13,6 +13,7 @@ import { Error } from './pages/Error';
 import { UserUpdate } from './pages/UserUpdate';
 import { ProfilePage } from './pages/Profile';
 import { MinecraftConnection } from './pages/MinecraftConnection';
+import { MinecraftContextProvider } from './contexts/MinecraftContext';
 
 const router = createBrowserRouter([
   {
@@ -55,7 +56,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthContextProvider>
-      <RouterProvider router={router} />
+      <MinecraftContextProvider>
+        <RouterProvider router={router} />
+      </MinecraftContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,
 );

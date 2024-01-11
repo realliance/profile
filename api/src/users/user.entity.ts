@@ -45,7 +45,7 @@ export class User {
   groups: Group[];
 
   @OneToOne(() => Connection)
-  @JoinColumn()
+  @JoinColumn({ name: 'id' })
   connections?: Connection;
 
   static fromJwt(jwt: ReallianceIdJwt): User {

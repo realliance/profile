@@ -13,7 +13,7 @@ export interface AuthedContext {
   updateToken: (token: string) => void;
 }
 
-interface AuthContextProps {
+export interface ContextProps {
   children: ReactNode;
 }
 
@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthedContext>({
   updateToken: () => {},
 });
 
-export function AuthContextProvider({ children }: AuthContextProps) {
+export function AuthContextProvider({ children }: ContextProps) {
   const [token, setToken] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [profile, setProfile] = useState<User | undefined>(undefined);

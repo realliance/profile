@@ -17,6 +17,7 @@ export interface paths {
   };
   "/api/connections/minecraft": {
     post: operations["ConnectionController_addMinecraft"];
+    delete: operations["ConnectionController_removeMinecraft"];
   };
   "/api/groups/{id}": {
     get: operations["GroupController_getById"];
@@ -38,7 +39,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     Connection: {
-      id: string;
+      userId: string;
       minecraft_uuid?: string;
     };
     User: {
@@ -137,6 +138,13 @@ export interface operations {
     };
     responses: {
       201: {
+        content: never;
+      };
+    };
+  };
+  ConnectionController_removeMinecraft: {
+    responses: {
+      200: {
         content: never;
       };
     };

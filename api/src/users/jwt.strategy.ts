@@ -36,7 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       .then((user) => {
         if (user) {
           console.log('Updating user against JWT');
-          this.connectionService.saveForUser(user);
+          this.connectionService.saveForUser(user, {});
           this.userService.updateUser(user.id, {
             displayName: jwt.name,
             username: jwt.preferred_username,
@@ -45,7 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         } else {
           console.log('Bootstrapping new user');
           const user = User.fromJwt(jwt);
-          this.connectionService.saveForUser(user);
+          this.connectionService.saveForUser(user, {});
           this.userService.create(user);
         }
       })

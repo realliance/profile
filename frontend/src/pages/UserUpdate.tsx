@@ -14,6 +14,8 @@ import { Button, Label, Textarea } from 'flowbite-react';
 import { Value } from '../util/events';
 import { canEdit } from '../util/user';
 import { MicrosoftProvider, useOIDCProvider } from '../util/oidc';
+import { ConnectionCard } from '../components/ConnectionCard';
+import { useMinecraftContext } from '../util/minecraft';
 
 function LoadingAnimation() {
   return (
@@ -62,6 +64,9 @@ interface EventTargets {
 
 export function UserUpdate() {
   const { loading, profile, token } = useContext(AuthContext);
+  const minecraftContext = useMinecraftContext(
+    profile?.connections?.minecraft_uuid,
+  );
   const { beginFlow: beginMsFlow } = useOIDCProvider(MicrosoftProvider);
   const user = useLoaderData() as User;
   const navigate = useNavigate();
@@ -153,24 +158,31 @@ export function UserUpdate() {
     [user, onSubmit, description, setDescription, pronouns],
   );
 
-  const content = useMemo(
-    () =>
-      loading ? (
-        <LoadingAnimation />
-      ) : allowUserEdit ? (
-        userForm
-      ) : (
-        <AccessDenied />
-      ),
-    [loading, allowUserEdit, userForm],
-  );
+  const minecraftSubtitle = minecraftContext?.loading
+    ? 'Loading'
+    : minecraftContext?.username ?? undefined;
 
   return (
     <div className="container max-w-2xl mx-auto flex flex-col gap-3">
-      {content}
-      <hr />
-      <h1 className="text-2xl">Connections</h1>
-      <Button onClick={() => beginMsFlow()}>Connect Minecraft</Button>
+      {loading ? (
+        <LoadingAnimation />
+      ) : allowUserEdit ? (
+        <>
+          {userForm}
+          <hr />
+          <h1 className="text-2xl">Connections</h1>
+          <ConnectionCard
+            title={`Minecraft ${minecraftSubtitle && '- ' + minecraftSubtitle}`}
+            description="Connect your Microsoft account to enlist your Minecraft user for future sevres."
+            avatarImage={minecraftContext?.avatar}
+            connected={profile?.connections?.minecraft_uuid !== undefined}
+            onConnect={() => beginMsFlow()}
+            onDisconnect={() => alert('Unimplemented')}
+          />
+        </>
+      ) : (
+        <AccessDenied />
+      )}
     </div>
   );
 }

@@ -1,4 +1,6 @@
-export async function authenticateAgainstMinecraft(msAccessToken: string) {
+export async function authenticateAgainstMinecraft(
+  msAccessToken: string,
+): Promise<string> {
   const xboxLiveAuth = {
     Properties: {
       AuthMethod: 'RPS',
@@ -26,7 +28,7 @@ export async function authenticateAgainstMinecraft(msAccessToken: string) {
   }
 
   const xboxLiveJson = await xboxLiveRes.json();
-  console.log('xboxLiveJson', xboxLiveJson);
+  console.log('xboxLiveJson');
   const xboxLiveToken = xboxLiveJson['Token'];
 
   const xstsAuth = {
@@ -52,7 +54,7 @@ export async function authenticateAgainstMinecraft(msAccessToken: string) {
   }
 
   const xstsJson = await xstsRes.json();
-  console.log('xstsJson', xstsJson);
+  console.log('xstsJson');
 
   const xstsToken = xstsJson['Token'];
   const xstsUhs = xstsJson['DisplayClaims']['xui'][0]['uhs'];
@@ -78,7 +80,7 @@ export async function authenticateAgainstMinecraft(msAccessToken: string) {
   }
 
   const minecraftResJson = await minecraftRes.json();
-  console.log('minecraftResJson', minecraftResJson);
+  console.log('minecraftResJson');
   const minecraftToken = minecraftResJson['access_token'];
 
   const profileRes = await fetch(
@@ -96,7 +98,7 @@ export async function authenticateAgainstMinecraft(msAccessToken: string) {
     throw new Error(await profileRes.text());
   }
 
-  console.log('Bearer token', minecraftToken);
+  console.log('Profile');
 
-  console.log('Profile', await minecraftRes.json());
+  return (await profileRes.json()).id;
 }
