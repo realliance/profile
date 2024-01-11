@@ -31,7 +31,7 @@ export function MinecraftConnection() {
           const { error } = await addMinecraftToUser(token, msAccessToken);
 
           if (error) {
-            setMessage(`${error}`);
+            setMessage(JSON.stringify(error));
             return;
           }
 
