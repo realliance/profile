@@ -1,6 +1,7 @@
 export async function authenticateAgainstMinecraft(
   msAccessToken: string,
 ): Promise<string> {
+  console.log('Starting auth flow to get minecraft id');
   const xboxLiveAuth = {
     Properties: {
       AuthMethod: 'RPS',
