@@ -61,11 +61,18 @@ export function AuthContextProvider({ children }: ContextProps) {
       console.log('Getting profile claims');
       const run = async () => {
         const now = Date.now();
-        const { data, error } = await getProfile(token);
+        const resp = await getProfile(token);
+        const error = resp.error;
+        let data = resp.data;
 
         if (error) {
           console.error(error);
           return;
+        }
+
+        // On first load data can sometimes not exist, double check
+        if (data?.id === undefined) {
+          data = (await getProfile(token)).data;
         }
 
         const diff = Date.now() - now;
@@ -88,7 +95,10 @@ export function AuthContextProvider({ children }: ContextProps) {
     profile,
     token,
     loading,
-    reloadAuthState: () => setLoading(true),
+    reloadAuthState: () => {
+      setLoading(true);
+      setProfile(undefined);
+    },
     updateToken: (token) => {
       setLoading(true);
       setToken(token);

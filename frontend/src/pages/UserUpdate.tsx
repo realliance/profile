@@ -63,7 +63,7 @@ interface EventTargets {
 }
 
 export function UserUpdate() {
-  const { loading, profile, token } = useContext(AuthContext);
+  const { loading, profile, token, reloadAuthState } = useContext(AuthContext);
   const minecraftContext = useMinecraftContext(
     profile?.connections?.minecraft_uuid,
   );
@@ -75,6 +75,10 @@ export function UserUpdate() {
   const [pronouns, setPronouns] = useState<string | undefined>(undefined);
 
   const allowUserEdit = canEdit(profile, user?.username);
+
+  useEffect(() => {
+    reloadAuthState();
+  }, []);
 
   useEffect(() => {
     if (description === undefined && user.description) {
@@ -172,10 +176,12 @@ export function UserUpdate() {
           <hr />
           <h1 className="text-2xl">Connections</h1>
           <ConnectionCard
-            title={`Minecraft ${minecraftSubtitle && '- ' + minecraftSubtitle}`}
+            title={`Minecraft${
+              minecraftSubtitle ? ` - ${minecraftSubtitle}` : ''
+            }`}
             description="Connect your Microsoft account to enlist your Minecraft user for future sevres."
             avatarImage={minecraftContext?.avatar}
-            connected={profile?.connections?.minecraft_uuid !== undefined}
+            connected={profile?.connections?.minecraft_uuid !== null}
             onConnect={() => beginMsFlow()}
             onDisconnect={() => alert('Unimplemented')}
           />
