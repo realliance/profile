@@ -25,7 +25,7 @@ export async function authenticateAgainstMinecraft(
   );
 
   if (xboxLiveRes.status !== 200) {
-    throw new Error(await xboxLiveRes.text());
+    throw new Error(`${xboxLiveRes.status}, ${await xboxLiveRes.text()}`);
   }
 
   const xboxLiveJson = await xboxLiveRes.json();
