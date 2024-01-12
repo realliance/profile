@@ -51,7 +51,7 @@ export class User {
   static fromJwt(jwt: ReallianceIdJwt): User {
     return {
       id: jwt.sub,
-      displayName: jwt.name,
+      displayName: jwt.name ?? jwt.preferred_username,
       username: jwt.preferred_username,
       groups: [],
       admin: jwt.groups?.includes('Community Admin') ?? false,
