@@ -20,12 +20,13 @@ export class ConnectionController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiHeader({
-    name: 'Ms_authorization',
+    name: 'MS-Authorization',
   })
   async addMinecraft(
-    @Headers('Ms_authorization') msAccessToken,
+    @Headers('MS-Authorization') msAccessToken: string,
     @Request() req,
   ): Promise<void> {
+    console.log(msAccessToken, req.headers);
     const user = User.fromJwt(req.user);
     const id = await authenticateAgainstMinecraft(msAccessToken);
     await this.connectionService.saveForUser(user, { minecraft_uuid: id });
