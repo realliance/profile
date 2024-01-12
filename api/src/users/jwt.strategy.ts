@@ -43,12 +43,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             admin: User.fromJwt(jwt).admin,
           });
         } else {
-          console.log('Bootstrapping new user');
           const user = User.fromJwt(jwt);
-          console.log('saving user');
-          this.userService.create(user);
-          console.log('saving connections');
-          this.connectionService.saveForUser(user, {});
+          if (user.displayName) {
+            console.log('Bootstrapping new user');
+            console.log('saving user');
+            this.userService.create(user);
+            console.log('saving connections');
+            this.connectionService.saveForUser(user, {});
+          }
         }
       })
       .catch((e) => {

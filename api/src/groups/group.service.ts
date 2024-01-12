@@ -25,7 +25,7 @@ export class GroupsService {
   async findOneBy(group: Partial<Group>): Promise<Group | null> {
     return this.groupsRepository.findOne({
       where: group,
-      relations: ['users'],
+      relations: ['users', 'users.connections'],
     });
   }
 

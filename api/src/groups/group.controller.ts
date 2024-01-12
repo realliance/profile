@@ -66,10 +66,10 @@ export class GroupController {
   @Get('groups/:id/members')
   @ApiBearerAuth()
   @ApiParam(groupIdParam)
-  groupMembers(@Param() params: GetByIdParameter): Promise<User[]> {
+  groupMembers(@Param() params: GetByIdParameter): Promise<User[] | undefined> {
     return this.groupService
       .findOneBy({ id: params.id })
-      .then((group) => group.users);
+      .then((group) => group?.users);
   }
 
   @UseGuards(AuthGuard('jwt'))
