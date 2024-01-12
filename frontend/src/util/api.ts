@@ -7,6 +7,7 @@ export type Group = components['schemas']['Group'];
 export type User = components['schemas']['User'];
 export type NewGroup = components['schemas']['NewGroup'];
 export type UpdateUser = components['schemas']['UpdateUser'];
+export type MinecraftToken = components['schemas']['MinecraftToken'];
 
 const { GET, POST, PATCH } = createClient<paths>({ baseUrl: API_URL });
 
@@ -39,16 +40,12 @@ export const updateUser = (token: string, username: string, body: UpdateUser) =>
     body,
   });
 
-export const addMinecraftToUser = (token: string, msToken: string) =>
+export const addMinecraftToUser = (token: string, body: MinecraftToken) =>
   POST('/api/connections/minecraft', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    params: {
-      header: {
-        'MS-Authorization': msToken,
-      },
-    },
+    body,
   });
 
 export const group = (token: string, id: string) =>

@@ -61,6 +61,9 @@ export interface components {
       description?: string;
       pronouns?: string;
     };
+    MinecraftToken: {
+      token: string;
+    };
     NewGroup: {
       name: string;
     };
@@ -131,9 +134,10 @@ export interface operations {
     };
   };
   ConnectionController_addMinecraft: {
-    parameters: {
-      header: {
-        "MS-Authorization": string;
+    /** @description payload containing the token */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MinecraftToken"];
       };
     };
     responses: {

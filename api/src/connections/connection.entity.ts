@@ -1,5 +1,9 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+export class MinecraftToken {
+  token: string;
+}
+
 @Entity()
 export class Connection {
   @PrimaryColumn()

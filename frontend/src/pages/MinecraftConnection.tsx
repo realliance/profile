@@ -29,7 +29,9 @@ export function MinecraftConnection() {
       const run = async () => {
         try {
           console.log('Sending', msAccessToken);
-          const { error } = await addMinecraftToUser(token, msAccessToken);
+          const { error } = await addMinecraftToUser(token, {
+            token: msAccessToken,
+          });
 
           if (error) {
             setMessage(JSON.stringify(error));
