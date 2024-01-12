@@ -133,7 +133,7 @@ export interface operations {
   ConnectionController_addMinecraft: {
     parameters: {
       header?: {
-        Ms_Authorization?: string;
+        Ms_authorization?: string;
       };
     };
     responses: {

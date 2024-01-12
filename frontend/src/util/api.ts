@@ -46,7 +46,7 @@ export const addMinecraftToUser = (token: string, msToken: string) =>
     },
     params: {
       header: {
-        Ms_Authorization: msToken,
+        Ms_authorization: msToken,
       },
     },
   });

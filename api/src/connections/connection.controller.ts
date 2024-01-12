@@ -20,10 +20,10 @@ export class ConnectionController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiHeader({
-    name: 'Ms_Authorization',
+    name: 'Ms_authorization',
   })
   async addMinecraft(
-    @Headers('Ms_Authorization') msAccessToken,
+    @Headers('Ms_authorization') msAccessToken,
     @Request() req,
   ): Promise<void> {
     const user = User.fromJwt(req.user);
