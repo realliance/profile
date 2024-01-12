@@ -25,6 +25,7 @@ export async function authenticateAgainstMinecraft(
   );
 
   if (xboxLiveRes.status !== 200) {
+    console.log('failing out, payload', xboxLiveAuth);
     throw new Error(`${xboxLiveRes.status}, ${await xboxLiveRes.text()}`);
   }
 
