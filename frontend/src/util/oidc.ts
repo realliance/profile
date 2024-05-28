@@ -1,5 +1,6 @@
 import * as oidc from 'oauth4webapi';
 import Cookies from 'js-cookie';
+import { useMemo } from 'react';
 
 interface OpenIdConnectProvider {
   issuer: string;
@@ -48,14 +49,14 @@ export const useOIDCProvider = ({
   scopes,
   redirectUriPath,
 }: OpenIdConnectProvider): OpenIdConnectContext => {
-  const authorizationServer = oidc
+  const authorizationServer = useMemo(() => oidc
     .discoveryRequest(new URL(issuer))
     .then((response) =>
       oidc.processDiscoveryResponse(
         new URL(expectedIssuer ?? issuer),
         response,
       ),
-    );
+    ), []);
 
   return {
     beginFlow: async () =>
