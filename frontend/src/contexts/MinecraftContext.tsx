@@ -25,12 +25,6 @@ export function MinecraftContextProvider({ children }: ContextProps) {
       const run = async () => {
         const userInfo = await fetch(
           `https://playerdb.co/api/player/minecraft/${id}`,
-          {
-            headers: {
-              'User-Agent': 'community.realliance.net',
-              Accept: 'application/json',
-            },
-          },
         );
 
         const userJson = await userInfo.json();
