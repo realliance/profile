@@ -71,11 +71,13 @@ export function AuthContextProvider({ children }: ContextProps) {
       console.log('Updated token');
       setCookie('token', token, {
         sameSite: 'strict',
+        path: '/',
       });
 
       if (refreshToken) {
         setCookie('refreshToken', refreshToken, {
           sameSite: 'strict',
+          path: '/',
         });
         setNeedRefresh(false);
       }

@@ -147,7 +147,6 @@ export function UserUpdate() {
             </div>
             <Textarea
               id="description"
-              required
               placeholder="Talk about yourself!"
               value={description ?? ''}
               onChange={(e) => setDescription(e.target.value)}
