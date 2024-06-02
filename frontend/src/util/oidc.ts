@@ -39,7 +39,8 @@ const REDIRECT_URI = import.meta.env.PROD
 
 interface OpenIdConnectContext {
   beginFlow: () => Promise<void>;
-  completeFlow: (updateToken: (token: string) => void) => Promise<void>;
+  completeFlow: (updateToken: (token: string) => void, updateRefreshToken: (token: string | undefined) => void) => Promise<void>;
+  refreshToken: (refreshToken: string, updateToken: (token: string) => void, updateRefreshToken: (token: string | undefined) => void) => Promise<void>;
 }
 
 export const useOIDCProvider = ({
@@ -61,8 +62,9 @@ export const useOIDCProvider = ({
   return {
     beginFlow: async () =>
       beginAuthFlow(client, scopes, authorizationServer, redirectUriPath),
-    completeFlow: async (updateToken) =>
-      onRedirect(client, authorizationServer, redirectUriPath, updateToken),
+    completeFlow: async (updateToken, updateRefreshToken) =>
+      onRedirect(client, authorizationServer, redirectUriPath, updateToken, updateRefreshToken),
+    refreshToken: async (refreshToken, updateToken, updateRefreshToken) => handleRefreshToken(client, authorizationServer, refreshToken, updateToken, updateRefreshToken),
   };
 };
 
@@ -104,6 +106,7 @@ async function onRedirect(
   as: Promise<oidc.AuthorizationServer>,
   redirectPath: string | undefined,
   updateToken: (token: string) => void,
+  updateRefreshToken: (refreshToken: string | undefined) => void,
 ) {
   const codeVerifier = Cookies.get('codeVerifier');
   if (!codeVerifier) {
@@ -160,5 +163,31 @@ async function onRedirect(
     throw new Error();
   }
 
+
   updateToken(result.access_token);
+  updateRefreshToken(result.refresh_token);
+}
+
+async function handleRefreshToken(client: oidc.Client,
+  as: Promise<oidc.AuthorizationServer>,
+  refreshToken: string,
+  updateToken: (token: string) => void,
+  updateRefreshToken: (refreshToken: string | undefined) => void
+) {
+  const authServer = await as;
+
+  const response = await oidc.refreshTokenGrantRequest(authServer, client, refreshToken);
+  const result = await oidc.processRefreshTokenResponse(
+    authServer,
+    client,
+    response,
+  );
+
+  if (oidc.isOAuth2Error(result)) {
+    console.error(result);
+    throw new Error();
+  }
+
+  updateToken(result.access_token);
+  updateRefreshToken(result.refresh_token);
 }

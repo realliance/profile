@@ -19,7 +19,7 @@ export function MinecraftConnection() {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('code') !== null) {
-      completeFlow(setMsAccessToken);
+      completeFlow(setMsAccessToken, () => {});
     }
   }, [completeFlow]);
 

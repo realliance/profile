@@ -32,6 +32,9 @@ export interface paths {
   "/api/groups/{id}/join": {
     post: operations["GroupController_join"];
   };
+  "/api/groups/{id}/leave": {
+    post: operations["GroupController_leave"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -208,6 +211,21 @@ export interface operations {
     };
   };
   GroupController_join: {
+    parameters: {
+      path: {
+        /** @description Group Id */
+        id: string;
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": components["schemas"]["Group"];
+        };
+      };
+    };
+  };
+  GroupController_leave: {
     parameters: {
       path: {
         /** @description Group Id */

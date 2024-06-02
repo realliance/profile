@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
-import { Group, createGroup, group, groups } from './api';
+import { Group, createGroup, group, groupMembers, groups } from './api';
 import Cookies from 'js-cookie';
 
 export async function loadAllGroups(): Promise<Group[] | undefined> {
@@ -35,13 +35,14 @@ export async function loadGroup({
     const token = Cookies.get('token');
 
     const { data, error } = await group(token ?? '', params.id);
+    const { data: membersData, error: groupError } = await groupMembers(token ?? '', params.id);
 
-    if (error) {
-      console.warn(error);
+    if (error || groupError) {
+      console.warn(error, groupError);
       return null;
     }
 
-    return data;
+    return { ...data, users: membersData };
   }
 
   return null;

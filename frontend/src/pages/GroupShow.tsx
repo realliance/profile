@@ -1,37 +1,44 @@
 import { useLoaderData } from 'react-router-dom';
-import { Button } from 'flowbite-react';
-import { Group, joinGroup } from '../util/api';
-import { useContext, useEffect, useMemo } from 'react';
+import { Button, Spinner } from 'flowbite-react';
+import { Group, joinGroup, leaveGroup } from '../util/api';
+import { useContext, useMemo, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { ReallianceProvider, useOIDCProvider } from '../util/oidc';
 
 export function GroupShow() {
   const { token, profile } = useContext(AuthContext);
-  const { beginFlow } = useOIDCProvider(ReallianceProvider);
   const group = useLoaderData() as Group;
+  const [joinOverride, setJoinOverride] = useState<boolean | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!group && !token) {
-      beginFlow();
-    }
-  }, [group, token, beginFlow]);
+  const loggedIn = token !== undefined;
 
   const joined = useMemo(
-    () => group?.users?.some((user) => user.id === profile?.id),
-    [group, profile],
+    () => joinOverride === undefined ? group?.users?.some((user) => user.id === profile?.id) : joinOverride,
+    [group, profile, joinOverride],
   );
 
-  const join = () => {
+  const joinLabel = joined ? "Leave Group" : loggedIn ? "Join Group" : "Login to Join Group";
+
+  const handleJoinClick = async () => {
     if (token) {
-      joinGroup(token, group.id);
+      setLoading(true);
+      if (!joined) {
+        await joinGroup(token, group.id);
+        setJoinOverride(true);
+      } else {
+        await leaveGroup(token, group.id);
+        setJoinOverride(false);
+      }
+      setLoading(false);
     }
   };
 
   return (
     <div className="container max-w-xl mx-auto flex flex-col gap-3">
       <h1 className="text-4xl font-bold">{group?.name}</h1>
-      <Button disabled={joined} onClick={join} outline>
-        Join
+      <Button disabled={!loggedIn} onClick={handleJoinClick} outline className="flex flex-row gap-2 items-center">
+        {loading && <Spinner />}
+        {joinLabel}
       </Button>
     </div>
   );

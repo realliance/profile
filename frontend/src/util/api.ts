@@ -60,6 +60,18 @@ export const group = (token: string, id: string) =>
     },
   });
 
+export const groupMembers = (token: string, id: string) =>
+  GET('/api/groups/{id}/members', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      path: {
+        id,
+      },
+    },
+  });
+
 export const groups = () => GET('/api/groups');
 
 export const createGroup = (token: string, body: NewGroup) =>
@@ -73,6 +85,18 @@ export const createGroup = (token: string, body: NewGroup) =>
 
 export const joinGroup = (token: string, id: string) =>
   POST('/api/groups/{id}/join', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      path: {
+        id,
+      },
+    },
+  });
+
+export const leaveGroup = (token: string, id: string) =>
+  POST('/api/groups/{id}/leave', {
     headers: {
       Authorization: `Bearer ${token}`,
     },

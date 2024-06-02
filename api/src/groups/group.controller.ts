@@ -34,14 +34,15 @@ export class GroupController {
   constructor(
     private groupService: GroupsService,
     private userService: UsersService,
-  ) {}
+  ) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('groups/:id')
   @ApiParam(groupIdParam)
   @ApiBearerAuth()
-  getById(@Param() params: GetByIdParameter): Promise<Group> {
-    return this.groupService.findOneBy({ id: params.id });
+  async getById(@Param() params: GetByIdParameter): Promise<Group> {
+    const group = await this.groupService.findOneBy({ id: params.id });
+    // For public route, exclude user information
+    return { ...group, users: undefined };
   }
 
   @Get('groups')
@@ -96,5 +97,32 @@ export class GroupController {
     group.users.push(user);
 
     return this.groupService.updateGroup(group);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('groups/:id/leave')
+  @ApiBearerAuth()
+  @ApiParam(groupIdParam)
+  async leave(
+    @Request() req,
+    @Param() params: GetByIdParameter,
+  ): Promise<Group> {
+    const id = req.user.sub;
+
+    if (!id) {
+      throw new Error('User session not found, cannot leave group');
+    }
+
+    const user = await this.userService.findOneBy({ id });
+    const group = await this.groupService.findOneBy({ id: params.id });
+    const index = group.users.findIndex((user) => user.id === user.id);
+
+    if (user && index !== -1) {
+      group.users.splice(index, 1);
+      return this.groupService.updateGroup(group);
+
+    }
+
+    throw new Error('User does not exist in group');
   }
 }

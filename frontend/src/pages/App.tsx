@@ -5,16 +5,22 @@ import { Link, Outlet, useNavigation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 function App() {
-  const { profile, loading, updateToken } = useContext(AuthContext);
-  const { beginFlow, completeFlow } = useOIDCProvider(ReallianceProvider);
+  const { profile, loading, updateToken, updateRefreshToken, needRefresh, refreshToken } = useContext(AuthContext);
+  const { beginFlow, completeFlow, refreshToken: beginRefreshToken } = useOIDCProvider({ ...ReallianceProvider, redirectUriPath: window.location.pathname });
 
   const navigation = useNavigation();
+
+  useEffect(() =>{
+    if (!loading && needRefresh && refreshToken) {
+      beginRefreshToken(refreshToken, updateToken, updateRefreshToken)
+    }
+  }, [updateToken, updateRefreshToken, beginRefreshToken, needRefresh, refreshToken])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('code') !== null) {
-      completeFlow(updateToken);
+      completeFlow(updateToken, updateRefreshToken);
     }
   }, []);
 
@@ -36,7 +42,7 @@ function App() {
       );
     } else {
       return (
-        <Navbar.Link href="#" onClick={() => beginFlow()}>
+        <Navbar.Link onClick={() => beginFlow()}>
           Login
         </Navbar.Link>
       );
@@ -64,7 +70,7 @@ function App() {
         <Navbar.Collapse>{profileItem}</Navbar.Collapse>
       </Navbar>
       <div
-        className={`mt-3 grow ${
+        className={`mx-3 mt-3 grow ${
           navigation.state === 'loading' ? 'animate-pulse' : ''
         }`}
       >
