@@ -14,6 +14,7 @@ import { UserUpdate } from './pages/UserUpdate';
 import { ProfilePage } from './pages/Profile';
 import { MinecraftConnection } from './pages/MinecraftConnection';
 import { MinecraftContextProvider } from './contexts/MinecraftContext';
+import { DiscordConnection } from './pages/DiscordConnection';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: 'minecraft',
         element: <MinecraftConnection />,
+      },
+      {
+        path: 'discord',
+        element: <DiscordConnection />,
       },
     ],
   },

@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-export class MinecraftToken {
+export class Token {
   token: string;
 }
 
@@ -11,4 +11,7 @@ export class Connection {
 
   @Column({ unique: true, nullable: true })
   minecraft_uuid?: string;
+
+  @Column({ unique: true, nullable: true })
+  discordId?: string;
 }

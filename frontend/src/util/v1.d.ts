@@ -19,6 +19,10 @@ export interface paths {
     post: operations["ConnectionController_addMinecraft"];
     delete: operations["ConnectionController_removeMinecraft"];
   };
+  "/api/connections/discord": {
+    post: operations["ConnectionController_addDiscord"];
+    delete: operations["ConnectionController_removeDiscord"];
+  };
   "/api/groups/{id}": {
     get: operations["GroupController_getById"];
   };
@@ -44,6 +48,7 @@ export interface components {
     Connection: {
       userId: string;
       minecraft_uuid?: string;
+      discordId?: string;
     };
     User: {
       id: string;
@@ -64,7 +69,7 @@ export interface components {
       description?: string;
       pronouns?: string;
     };
-    MinecraftToken: {
+    Token: {
       token: string;
     };
     NewGroup: {
@@ -140,7 +145,7 @@ export interface operations {
     /** @description payload containing the token */
     requestBody: {
       content: {
-        "application/json": components["schemas"]["MinecraftToken"];
+        "application/json": components["schemas"]["Token"];
       };
     };
     responses: {
@@ -150,6 +155,26 @@ export interface operations {
     };
   };
   ConnectionController_removeMinecraft: {
+    responses: {
+      200: {
+        content: never;
+      };
+    };
+  };
+  ConnectionController_addDiscord: {
+    /** @description payload containing the token */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["Token"];
+      };
+    };
+    responses: {
+      201: {
+        content: never;
+      };
+    };
+  };
+  ConnectionController_removeDiscord: {
     responses: {
       200: {
         content: never;

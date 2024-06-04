@@ -7,7 +7,7 @@ export type Group = components['schemas']['Group'];
 export type User = components['schemas']['User'];
 export type NewGroup = components['schemas']['NewGroup'];
 export type UpdateUser = components['schemas']['UpdateUser'];
-export type MinecraftToken = components['schemas']['MinecraftToken'];
+export type Token = components['schemas']['Token'];
 
 const { GET, POST, PATCH } = createClient<paths>({ baseUrl: API_URL });
 
@@ -40,7 +40,7 @@ export const updateUser = (token: string, username: string, body: UpdateUser) =>
     body,
   });
 
-export const addMinecraftToUser = (token: string, body: MinecraftToken) =>
+export const addMinecraftToUser = (token: string, body: Token) =>
   POST('/api/connections/minecraft', {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -105,4 +105,12 @@ export const leaveGroup = (token: string, id: string) =>
         id,
       },
     },
+  });
+
+export const addDiscordToUser = (token: string, body: Token) =>
+  POST('/api/connections/discord', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body,
   });

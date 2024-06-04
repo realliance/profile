@@ -67,7 +67,9 @@ export function UserUpdate() {
   const minecraftContext = useMinecraftContext(
     profile?.connections?.minecraft_uuid,
   );
+
   const { beginFlow: beginMsFlow } = useOIDCProvider(MicrosoftProvider);
+
   const user = useLoaderData() as User;
   const navigate = useNavigate();
 
@@ -78,6 +80,7 @@ export function UserUpdate() {
 
   useEffect(() => {
     reloadAuthState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -114,6 +117,11 @@ export function UserUpdate() {
     },
     [token, navigate, user.username],
   );
+
+  const startDiscordFlow = () => {
+    const redirectUrl = encodeURI(`${window.location.protocol}//${window.location.host}/discord`);
+    window.location.href = `https://discord.com/oauth2/authorize?response_type=token&client_id=1247392795224838255&redirect_uri=${redirectUrl}&scope=identify`;
+  };
 
   const userForm = useMemo(
     () => (
@@ -175,13 +183,19 @@ export function UserUpdate() {
           <hr />
           <h1 className="text-2xl">Connections</h1>
           <ConnectionCard
-            title={`Minecraft${
-              minecraftSubtitle ? ` - ${minecraftSubtitle}` : ''
-            }`}
+            title={`Minecraft${minecraftSubtitle ? ` - ${minecraftSubtitle}` : ''
+              }`}
             description="Connect your Microsoft account to enlist your Minecraft user for future sevres."
             avatarImage={minecraftContext?.avatar}
             connected={profile?.connections?.minecraft_uuid !== null}
             onConnect={() => beginMsFlow()}
+            onDisconnect={() => alert('Unimplemented')}
+          />
+          <ConnectionCard
+            title="Discord"
+            description="Connect your Discord account to be granted permissions in Realliance servers."
+            connected={profile?.connections?.discordId !== null}
+            onConnect={() => startDiscordFlow()}
             onDisconnect={() => alert('Unimplemented')}
           />
         </>

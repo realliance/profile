@@ -57,7 +57,7 @@ export const useOIDCProvider = ({
         new URL(expectedIssuer ?? issuer),
         response,
       ),
-    ), []);
+    ), [expectedIssuer, issuer]);
 
   return {
     beginFlow: async () =>
